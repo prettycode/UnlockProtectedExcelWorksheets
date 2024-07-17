@@ -2,8 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-const string WORKSHEET_REGEX_PATTERN = @"xl/worksheets/.*\.xml$";
 const bool DEBUG = true;
+const string WORKSHEET_REGEX_PATTERN = @"xl/worksheets/.*\.xml$";
 
 string[] files = [
     @"..\..\..\Unprotected.xlsx",
@@ -29,6 +29,7 @@ foreach (string xlsx in files)
 static void RemoveSheetProtection(ZipArchiveEntry entry, bool reportProtectionOnly)
 {
     using Stream entryStream = entry.Open();
+
     var doc = XDocument.Load(entryStream);
     var sheetProtectionElements = doc.Descendants().Where(e => e.Name.LocalName == "sheetProtection");
     var elementCount = sheetProtectionElements.Count();
@@ -47,7 +48,8 @@ static void RemoveSheetProtection(ZipArchiveEntry entry, bool reportProtectionOn
         doc.Save(entryStream);
 
         Console.WriteLine($"{entry.FullName}: Protection removed.");
-    } else
+    }
+    else
     {
         Console.WriteLine($"{entry.FullName}: Protected found.");
     }
