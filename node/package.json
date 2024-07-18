@@ -1,0 +1,51 @@
+{
+    "name": "protected-worksheet-unlocker",
+    "version": "0.1.0",
+    "author": {
+        "name": "Chris O'Brien"
+    },
+    "license": "CC BY-NC 4.0",
+    "scripts": {
+        "clean": "rmdir node_modules /s /q",
+        "versions": "echo node: && node -v && echo pnpm: && pnpm -v",
+        "install:ci": "pnpm install --frozen-lockfile",
+        "outdated:ci": "pnpm outdated --long",
+        "outdated:fix": "pnpm update --latest",
+        "audit:ci": "pnpm audit --audit-level=low",
+        "audit:fix": "pnpm audit --fix",
+        "prettier:ci": "npx prettier . --check",
+        "prettier:fix": "npx prettier . --write",
+        "lint:ci": "npx eslint . --max-warnings=0",
+        "lint:fix": "npx eslint . --fix",
+        "copy-paste": "npx jscpd",
+        "copy-paste:ci": "npx jscpd --exitCode 1",
+        "build:ci": "npm run versions && npm run install:ci && npm run outdated:ci && npm run audit:ci && npm run prettier:ci && npm run lint:ci && npm run copy-paste:ci && npm run test:ci",
+        "build:fix": "npm run versions && npm run outdated:fix && npm run audit:fix && npm run prettier:fix && npm run lint:fix && npm run copy-paste && npm run test",
+        "test": "npx jest --passWithNoTests",
+        "test:ci": "npx jest --ci",
+        "start": "npx ts-node ./src/program.ts",
+        "start:fix": "npm run build:fix && npm run start",
+        "precommit": "npm run build:fix && npm run ci",
+        "ci": "npm run build:ci && npm run start",
+        "depcheck": "npx depcheck"
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.14",
+        "jsdom": "^24.1.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.7.0",
+        "@types/adm-zip": "^0.5.5",
+        "@types/jsdom": "^21.1.7",
+        "@types/node": "^20.14.11",
+        "depcheck": "^1.4.7",
+        "eslint": "^9.7.0",
+        "globals": "^15.8.0",
+        "jest": "^29.7.0",
+        "jscpd": "^4.0.5",
+        "prettier": "^3.3.3",
+        "ts-jest": "^29.2.3",
+        "ts-node": "^10.9.2",
+        "typescript-eslint": "^7.16.1"
+    }
+}

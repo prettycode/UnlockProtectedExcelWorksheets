@@ -6,8 +6,8 @@ const bool DEBUG = true;
 const string WORKSHEET_REGEX_PATTERN = @"xl/worksheets/.*\.xml$";
 
 string[] files = [
-    @"..\..\..\Unprotected.xlsx",
-    @"..\..\..\Protected.xlsx"
+    @"..\..\..\..\data\Unprotected.xlsx",
+    @"..\..\..\..\data\Protected.xlsx"
 ];
 
 foreach (string xlsx in files)
