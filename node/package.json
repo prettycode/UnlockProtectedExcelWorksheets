@@ -5,10 +5,10 @@
         "name": "Chris O'Brien"
     },
     "license": "CC BY-NC 4.0",
+    "type": "module",
     "scripts": {
         "clean": "rmdir node_modules /s /q",
         "versions": "echo node: && node -v && echo pnpm: && pnpm -v",
-        "preinstall": "npx only-allow pnpm",
         "install:ci": "pnpm install --frozen-lockfile",
         "outdated:ci": "pnpm outdated --long",
         "outdated:fix": "pnpm update --latest",
@@ -24,14 +24,15 @@
         "build:fix": "pnpm versions && pnpm outdated:fix && pnpm audit:fix && pnpm prettier:fix && pnpm lint:fix && pnpm copy-paste && pnpm test",
         "test": "jest --passWithNoTests",
         "test:ci": "jest --ci",
-        "start": "ts-node ./src/program.ts",
+        "start": "npx tsx ./src/program.ts --files ../data/Unprotected.xlsx ../data/Protected.xlsx",
         "start:fix": "pnpm build:fix && pnpm start",
         "precommit": "pnpm build:fix && pnpm run ci",
         "ci": "pnpm build:ci && pnpm start"
     },
     "dependencies": {
         "adm-zip": "^0.5.14",
-        "jsdom": "^24.1.0"
+        "jsdom": "^24.1.0",
+        "ts-command-line-args": "^2.5.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.7.0",
@@ -46,6 +47,7 @@
         "prettier": "^3.3.3",
         "ts-jest": "^29.2.3",
         "ts-node": "^10.9.2",
+        "tsx": "^4.16.2",
         "typescript-eslint": "^7.16.1"
     }
 }

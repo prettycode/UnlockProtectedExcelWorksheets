@@ -1,21 +1,32 @@
 import { Worksheet } from './Worksheet';
 import { Workbook } from './Workbook';
+import { parse } from 'ts-command-line-args';
 
-const DEBUG = true;
-const args = ['../data/Unprotected.xlsx', '../data/Protected.xlsx'];
+const { apply, files } = parse<{
+    apply: boolean;
+    files: Array<string>;
+}>({
+    apply: { type: Boolean, optional: true },
+    files: { type: String, multiple: true, optional: true }
+});
 
-(async (): Promise<Array<void>> => await Promise.all(args.map(processFile)))();
+if (!files?.length) {
+    console.error('No files specified.');
+    process.exit(1);
+}
 
-export async function processFile(xlsxFilePath: string): Promise<void> {
+await Promise.all(files.map((filePath: string) => processFile(filePath, !apply)));
+
+export async function processFile(xlsxFilePath: string, isDebug: boolean): Promise<void> {
     const workbook = await Workbook.fromFile(xlsxFilePath);
     const { worksheets } = workbook;
 
     console.log(`File: ${xlsxFilePath}`);
     console.log(`Found ${worksheets.length} worksheets.`);
 
-    worksheets.forEach((sheet) => removeSheetProtection(sheet, DEBUG));
+    worksheets.forEach((sheet) => removeSheetProtection(sheet, isDebug));
 
-    if (!DEBUG) {
+    if (!isDebug) {
         await workbook.save(xlsxFilePath);
     }
 
