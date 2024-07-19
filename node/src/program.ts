@@ -6,7 +6,7 @@ const args = ['../data/Unprotected.xlsx', '../data/Protected.xlsx'];
 
 args.forEach(processFile);
 
-async function processFile(xlsxFilePath: string): Promise<void> {
+export async function processFile(xlsxFilePath: string): Promise<void> {
     const workbook = await Workbook.fromFile(xlsxFilePath);
     const worksheets: Array<Worksheet> = workbook.worksheets;
 
@@ -22,7 +22,7 @@ async function processFile(xlsxFilePath: string): Promise<void> {
     console.log();
 }
 
-function removeSheetProtection(sheet: Worksheet, reportProtectionOnly: boolean): void {
+export function removeSheetProtection(sheet: Worksheet, reportProtectionOnly: boolean): void {
     const entryName = sheet.zipEntry.entryName;
 
     if (!sheet.isProtected()) {
