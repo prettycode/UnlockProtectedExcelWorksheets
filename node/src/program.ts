@@ -1,52 +1,41 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
-import AdmZip from 'adm-zip';
-import { JSDOM } from 'jsdom';
+import { Worksheet } from './Worksheet';
+import { Workbook } from './Workbook';
 
-const WORKSHEET_REGEX_PATTERN = /xl\/worksheets\/.*\.xml$/;
 const DEBUG = true;
-
 const args = ['../data/Unprotected.xlsx', '../data/Protected.xlsx'];
 
-args.forEach((xlsx) => {
-    const zip = new AdmZip(readFileSync(xlsx));
-    const zipEntries = zip.getEntries();
+args.forEach(processFile);
 
-    const worksheets = zipEntries.filter((entry) => WORKSHEET_REGEX_PATTERN.test(entry.entryName));
-    const worksheetsCount = worksheets.length;
+async function processFile(xlsxFilePath: string): Promise<void> {
+    const workbook = await Workbook.fromFile(xlsxFilePath);
+    const worksheets: Array<Worksheet> = workbook.worksheets;
 
-    console.log(`File: ${resolve(xlsx)}`);
-    console.log(`Found ${worksheetsCount} worksheets.`);
+    console.log(`File: ${xlsxFilePath}`);
+    console.log(`Found ${worksheets.length} worksheets.`);
 
     worksheets.forEach((sheet) => removeSheetProtection(sheet, DEBUG));
 
     if (!DEBUG) {
-        writeFileSync(xlsx, zip.toBuffer());
+        await workbook.save(xlsxFilePath);
     }
 
     console.log();
-});
+}
 
-function removeSheetProtection(entry: AdmZip.IZipEntry, reportProtectionOnly: boolean): void {
-    const content = entry.getData().toString('utf8');
-    const dom = new JSDOM(content, { contentType: 'text/xml' });
-    const doc = dom.window.document;
+function removeSheetProtection(sheet: Worksheet, reportProtectionOnly: boolean): void {
+    const entryName = sheet.zipEntry.entryName;
 
-    const sheetProtectionElements = doc.querySelectorAll('sheetProtection');
-    const elementCount = sheetProtectionElements.length;
-
-    if (elementCount < 1) {
-        console.log(`${entry.entryName}: No protection found.`);
+    if (!sheet.isProtected()) {
+        console.log(`${entryName}: No protection found.`);
         return;
     }
 
-    if (!reportProtectionOnly) {
-        sheetProtectionElements.forEach((element) => element.remove());
-        const modifiedContent = dom.serialize();
-        entry.setData(Buffer.from(modifiedContent, 'utf8'));
-
-        console.log(`${entry.entryName}: Protection removed.`);
-    } else {
-        console.log(`${entry.entryName}: Protection found.`);
+    if (reportProtectionOnly) {
+        console.log(`${entryName}: Protection found.`);
+        return;
     }
+
+    sheet.removeProtection();
+
+    console.log(`${entryName}: Protection removed.`);
 }
