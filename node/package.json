@@ -31,6 +31,10 @@
         "precommit": "pnpm build:fix && pnpm run ci",
         "ci": "pnpm build:ci && pnpm start"
     },
+    "engines": {
+        "node": ">=20.15.1",
+        "pnpm": ">=9.5.0"
+    },
     "dependencies": {
         "adm-zip": "^0.5.14",
         "jsdom": "^24.1.0",
