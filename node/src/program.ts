@@ -4,7 +4,7 @@ import { Workbook } from './Workbook';
 const DEBUG = true;
 const args = ['../data/Unprotected.xlsx', '../data/Protected.xlsx'];
 
-args.forEach(processFile);
+(async (): Promise<Array<void>> => await Promise.all(args.map(processFile)))();
 
 export async function processFile(xlsxFilePath: string): Promise<void> {
     const workbook = await Workbook.fromFile(xlsxFilePath);
