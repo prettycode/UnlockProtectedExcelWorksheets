@@ -8,7 +8,7 @@ const args = ['../data/Unprotected.xlsx', '../data/Protected.xlsx'];
 
 export async function processFile(xlsxFilePath: string): Promise<void> {
     const workbook = await Workbook.fromFile(xlsxFilePath);
-    const worksheets: Array<Worksheet> = workbook.worksheets;
+    const { worksheets } = workbook;
 
     console.log(`File: ${xlsxFilePath}`);
     console.log(`Found ${worksheets.length} worksheets.`);
