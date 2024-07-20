@@ -3,12 +3,14 @@ import { Worksheet } from './Worksheet';
 import { promises as fs } from 'fs';
 
 export class Workbook {
-    public readonly worksheets: Array<Worksheet>;
     public readonly zip: AdmZip;
+    public readonly worksheets: Array<Worksheet>;
+    public readonly hasProtectedSheet: boolean;
 
     constructor(zip: AdmZip) {
         this.zip = zip;
         this.worksheets = this.getSheetEntries(zip);
+        this.hasProtectedSheet = this.worksheets.some((sheet) => sheet.isProtected());
     }
 
     public static async fromFile(xlsxFilePath: string): Promise<Workbook> {

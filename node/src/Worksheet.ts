@@ -2,19 +2,20 @@ import { IZipEntry } from 'adm-zip';
 import { JSDOM } from 'jsdom';
 
 export class Worksheet {
-    private dom: JSDOM;
+    private readonly zipEntry: IZipEntry;
+    private readonly dom: JSDOM;
+    private readonly protectionElements: NodeListOf<Element>;
     private protected: boolean;
-    private protectionElements: NodeListOf<Element>;
-
-    public readonly zipEntry: IZipEntry;
+    public readonly zipEntryName: string;
 
     constructor(zipEntry: IZipEntry) {
         const sheetXml = zipEntry.getData().toString('utf8');
 
+        this.zipEntry = zipEntry;
+        this.zipEntryName = zipEntry.entryName;
         this.dom = new JSDOM(sheetXml, { contentType: 'text/xml' });
         this.protectionElements = this.dom.window.document.querySelectorAll('sheetProtection');
         this.protected = !!this.protectionElements.length;
-        this.zipEntry = zipEntry;
     }
 
     public isProtected(): boolean {

@@ -17,16 +17,16 @@ if (!files?.length) {
 
 await Promise.all(files.map((filePath: string) => processFile(filePath, !apply)));
 
-export async function processFile(xlsxFilePath: string, isDebug: boolean): Promise<void> {
+export async function processFile(xlsxFilePath: string, reportProtectionOnly: boolean): Promise<void> {
     const workbook = await Workbook.fromFile(xlsxFilePath);
     const { worksheets } = workbook;
 
     console.log(`File: ${xlsxFilePath}`);
     console.log(`Found ${worksheets.length} worksheets.`);
 
-    worksheets.forEach((sheet) => removeSheetProtection(sheet, isDebug));
+    worksheets.forEach((sheet) => removeSheetProtection(sheet, reportProtectionOnly));
 
-    if (!isDebug) {
+    if (workbook.hasProtectedSheet && !reportProtectionOnly) {
         await workbook.save(xlsxFilePath);
     }
 
@@ -34,7 +34,7 @@ export async function processFile(xlsxFilePath: string, isDebug: boolean): Promi
 }
 
 export function removeSheetProtection(sheet: Worksheet, reportProtectionOnly: boolean): void {
-    const entryName = sheet.zipEntry.entryName;
+    const entryName = sheet.zipEntryName;
 
     if (!sheet.isProtected()) {
         console.log(`${entryName}: No protection found.`);
