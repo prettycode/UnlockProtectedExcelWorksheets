@@ -7,7 +7,7 @@
     "license": "CC BY-NC 4.0",
     "type": "module",
     "scripts": {
-        "clean": "npx rimraf ./node_modules ./coverage",
+        "clean": "npx rimraf@latest ./node_modules ./coverage",
         "versions": "echo node: && node -v && echo pnpm: && pnpm -v",
         "install:ci": "pnpm install --frozen-lockfile",
         "outdated:ci": "pnpm outdated --long",
@@ -29,7 +29,8 @@
         "start": "npx tsx ./src/program.ts --files ../data/Unprotected.xlsx ../data/Protected.xlsx",
         "start:fix": "pnpm build:fix && pnpm start",
         "precommit": "pnpm build:fix && pnpm run ci",
-        "ci": "pnpm build:ci && pnpm start"
+        "ci": "pnpm build:ci && pnpm start",
+        "build": "pnpm build:fix && pnpm build:ci && tsc build"
     },
     "engines": {
         "node": ">=20.15.1",
