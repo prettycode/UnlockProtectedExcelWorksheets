@@ -5,3 +5,4 @@ node/node_modules/
 node/coverage/
 node/dist/
 node/.env*
+web/node_modules
