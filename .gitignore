@@ -3,4 +3,5 @@ dotnet/bin/
 dotnet/obj/
 node/node_modules/
 node/coverage/
+node/dist/
 node/.env*
