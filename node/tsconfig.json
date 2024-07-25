@@ -1,9 +1,9 @@
 {
+    "strict": true,
     "compilerOptions": {
         "esModuleInterop": true,
         "module": "ESNext",
         "moduleResolution": "Node",
         "target": "ESNext"
-    },
-    "strict": true
+    }
 }
