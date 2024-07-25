@@ -15,6 +15,11 @@ export class Workbook {
 
     public static async fromFile(xlsxFilePath: string): Promise<Workbook> {
         const fileBuffer = await fs.readFile(xlsxFilePath);
+        return Workbook.fromBuffer(fileBuffer);
+    }
+
+    public static fromBuffer(arrayBuffer: ArrayBuffer): Workbook {
+        const fileBuffer = Buffer.from(new Uint8Array(arrayBuffer));
         const zip = new AdmZip(fileBuffer);
 
         return new Workbook(zip);
